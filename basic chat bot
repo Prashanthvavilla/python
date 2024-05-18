@@ -1,0 +1,26 @@
+import re
+
+class SimpleChatBot:
+    def __init__(self):
+        self.responses = {
+            r'hi|hello': 'Hello! How can I assist you today?',
+            r'how are you?': 'I am doing good, thank you for asking!',
+            r'bye|goodbye': 'Goodbye! Have a great day!'
+        }
+
+    def respond(self, message):
+        for pattern, response in self.responses.items():
+            if re.search(pattern, message.lower()):
+                return response
+        return "I'm sorry, I don't understand that."
+
+if __name__ == "__main__":
+    bot = SimpleChatBot()
+    print("Bot: Hello! How can I assist you today?")
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() == 'exit':
+            print("Bot: Goodbye! Have a great day!")
+            break
+        response = bot.respond(user_input)
+        print("Bot:", response)
