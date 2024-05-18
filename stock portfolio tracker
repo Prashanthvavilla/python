@@ -1,0 +1,45 @@
+import yfinance as yf
+import pandas as pd
+
+class PortfolioTracker:
+    def __init__(self):
+        self.portfolio = {}
+
+    def add_asset(self, ticker, quantity):
+        if ticker in self.portfolio:
+            self.portfolio[ticker] += quantity
+        else:
+            self.portfolio[ticker] = quantity
+
+    def remove_asset(self, ticker, quantity):
+        if ticker in self.portfolio:
+            self.portfolio[ticker] -= quantity
+            if self.portfolio[ticker] <= 0:
+                del self.portfolio[ticker]
+
+    def get_portfolio_value(self):
+        total_value = 0
+        for ticker, quantity in self.portfolio.items():
+            data = yf.Ticker(ticker).history(period="1d")
+            latest_price = data['Close'].iloc[-1]
+            total_value += latest_price * quantity
+        return total_value
+
+    def print_portfolio(self):
+        print("Portfolio:")
+        for ticker, quantity in self.portfolio.items():
+            print(f"{ticker}: {quantity}")
+
+    def track_portfolio(self):
+        print("Tracking portfolio...")
+        portfolio_value = self.get_portfolio_value()
+        print(f"Portfolio value: ${portfolio_value:.2f}")
+
+
+if __name__ == "__main__":
+    tracker = PortfolioTracker()
+    tracker.add_asset("AAPL", 10)
+    tracker.add_asset("MSFT", 5)
+    tracker.add_asset("GOOGL", 3)
+    tracker.print_portfolio()
+    tracker.track_portfolio()
